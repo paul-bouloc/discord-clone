@@ -1,9 +1,9 @@
 
 import * as dotenv from 'dotenv'
 import http from 'http';
-import validateEnv from './utils/validate-env.util';
 import app from './app';
-import serverErrorHandler from './utils/server-error-handler.util';
+import validateEnv from '@/utils/validate-env.util';
+import serverErrorHandler from '@/utils/server-error-handler.util';
 
 dotenv.config();
 validateEnv();
