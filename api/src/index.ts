@@ -1,16 +1,16 @@
 
-import * as dotenv from 'dotenv'
+import serverErrorHandler from '@/utils/server-error-handler.util';
+import validateEnv from '@/utils/validate-env.util';
+import * as dotenv from 'dotenv';
 import http from 'http';
 import app from './app';
-import validateEnv from '@/utils/validate-env.util';
-import serverErrorHandler from '@/utils/server-error-handler.util';
 
 dotenv.config();
 validateEnv();
 
 const PORT = process.env.PORT || 3000;
 
-app.set('port', PORT);
+app.set('port', PORT)
 
 const server = http.createServer(app);
 
