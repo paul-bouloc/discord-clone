@@ -7,6 +7,6 @@ appRouter.get('/', (req: Request, res: Response) => {
   res.send('Hello, world !');
 });
 
-appRouter.use('/users', authRouter);
+appRouter.use('/auth', authRouter);
 
 export default appRouter;

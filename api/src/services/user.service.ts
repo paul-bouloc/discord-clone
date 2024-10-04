@@ -31,4 +31,16 @@ export default class UserService {
 
     return userWithoutAvatar;
   }
+
+  static async findByEmail(email: string): Promise<ClientUser | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) return null;
+    
+    const {avatar_data, avatar_type, ...userWithoutAvatar} = user;
+
+    return userWithoutAvatar;
+  }
 }
