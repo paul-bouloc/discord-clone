@@ -3,17 +3,19 @@ import { InternalServerErrorException } from '@/constants/exceptions/internal-se
 import { NextFunction, Request, Response } from 'express';
 import { z, ZodError } from 'zod';
 
-export function validateData(schema: z.ZodObject<any, any>) {
+export function validateData(schema: z.ZodTypeAny) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.body);
+      const validatedData = schema.parse(req.body);
+      req.body = validatedData; // Remplacer le corps de la requête par les données validées
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-      const errorMessages = error.errors.map(issue => issue.message)
-        throw new BadRequestException('Error validating data', errorMessages);
+        const errorMessages = error.errors.map(issue => issue.message);
+        next(new BadRequestException('Erreur de validation des données', errorMessages));
       } else {
-        throw new InternalServerErrorException('Internal server error');
+        console.error('Erreur inattendue dans validateData:', error);
+        next(new InternalServerErrorException('Erreur interne du serveur lors de la validation'));
       }
     }
   };
