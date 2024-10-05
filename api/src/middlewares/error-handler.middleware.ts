@@ -9,7 +9,7 @@ export const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res:
     res.status(statusCode).send(<ApiResponse<undefined>>{
       status: statusCode,
       message: message,
-      data: undefined,
+      data: err.data || undefined,
     });
     return;
   }
