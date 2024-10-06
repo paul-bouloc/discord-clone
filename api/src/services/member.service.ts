@@ -47,4 +47,20 @@ export default class MemberService {
 
     return returnedMember;
   }
+
+  static async findServerMembers(serverId: string): Promise<ClientMember[]> {
+    const members = await this.prisma.member.findMany({
+      where: { serverId },
+    });
+
+    const clientMembers = await Promise.all(members.map(async (member) => {
+      const user = await this.findById(member.serverId, member.userId)
+
+      if(!user) return null
+
+      return user
+    }))
+
+    return clientMembers.filter(member => member !== null) as ClientMember[];
+  }
 }

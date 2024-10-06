@@ -1,4 +1,4 @@
-import { joinServer, leaveServer } from '@controllers/member.controller';
+import { getServerMembers, joinServer, leaveServer } from '@controllers/member.controller';
 import { createServer, deleteServer, getServer, getUserServers, updateServerBanner, updateServerName } from '@controllers/server.controller';
 import { createServerDto, updateServerBannerDto } from '@dtos/server.dto';
 import isAuthenticated from '@middlewares/is-authenticated.middleware';
@@ -13,6 +13,9 @@ serverRouter.get('/', isAuthenticated, tryCatch(getUserServers));
 
 // Get a server by id
 serverRouter.get('/:id', isAuthenticated, tryCatch(getServer));
+
+// Get all members of a server
+serverRouter.get('/:id/members', isAuthenticated, tryCatch(getServerMembers));
 
 // Create a server
 serverRouter.post('/', isAuthenticated, validateData(createServerDto), tryCatch(createServer));

@@ -37,3 +37,15 @@ export const leaveServer = async (req: Request, res: Response, next: NextFunctio
 
   res.status(200).json({message: 'You have left the server'})
 }
+
+/**
+ * @description Get all members of a server
+ */
+export const getServerMembers = async (req: Request, res: Response, next: NextFunction) => {
+  const serverId = req.params.id
+  if(!serverId) throw new BadRequestException('Server id is required')
+
+  const members = await MemberService.findServerMembers(serverId)
+
+  res.status(200).json(members)
+}
