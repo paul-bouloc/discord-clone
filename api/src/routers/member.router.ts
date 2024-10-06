@@ -9,6 +9,6 @@ const memberRouter = express.Router({mergeParams: true});
 memberRouter.get('/', isAuthenticated, tryCatch(getServerMembers));
 
 // Get a member by id
-memberRouter.get('/:id', isAuthenticated, tryCatch(getMember));
+memberRouter.get('/:memberId', isAuthenticated, tryCatch(getMember));
 
 export default memberRouter;

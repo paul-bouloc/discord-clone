@@ -31,11 +31,8 @@ model User {
   avatar_data Bytes?
   avatar_type ImageType?
 
-  serversOwned  Server[]
-  serversJoined Member[]
-
-  groupsOwned  Group[]
-  groupsJoined GroupMember[]
+  servers Member[]
+  groups  GroupMember[]
 
   messages Message[] @relation("author")
 
@@ -52,9 +49,6 @@ model Server {
 
   banner_data Bytes?
   banner_type ImageType?
-
-  ownerId String @db.ObjectId
-  owner   User   @relation(fields: [ownerId], references: [id])
 
   members  Member[]
   channels Channel[]
@@ -79,6 +73,8 @@ model Member {
   server   Server @relation(fields: [serverId], references: [id])
 
   role MemberRole @default(USER)
+
+  active Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -134,9 +130,6 @@ model Group {
 
   name String
 
-  ownerId String @db.ObjectId
-  owner   User   @relation(fields: [ownerId], references: [id])
-
   members GroupMember[]
 
   messages Message[]
@@ -145,12 +138,22 @@ model Group {
   updatedAt DateTime @updatedAt
 }
 
+enum GroupMemberRole {
+  OWNER
+  USER
+}
+
 model GroupMember {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
 
+  role GroupMemberRole @default(USER)
+
   groupId String @db.ObjectId
   group   Group  @relation(fields: [groupId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

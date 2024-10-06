@@ -13,25 +13,25 @@ const serverRouter = express.Router();
 serverRouter.get('/', isAuthenticated, tryCatch(getUserServers));
 
 // Get a server by id
-serverRouter.get('/:id', isAuthenticated, tryCatch(getServer));
+serverRouter.get('/:serverId', isAuthenticated, tryCatch(getServer));
 
 // Create a server
 serverRouter.post('/', isAuthenticated, validateData(createServerDto), tryCatch(createServer));
 
 // Join a server
-serverRouter.post('/:id/join', isAuthenticated, tryCatch(joinServer));
+serverRouter.post('/:serverId/join', isAuthenticated, tryCatch(joinServer));
 
 // Leave a server
-serverRouter.post('/:id/leave', isAuthenticated, tryCatch(leaveServer));
+serverRouter.post('/:serverId/leave', isAuthenticated, tryCatch(leaveServer));
 
 // Update the name of the server
-serverRouter.put('/:id/name', isAuthenticated, validateData(createServerDto), tryCatch(updateServerName));
+serverRouter.put('/:serverId/name', isAuthenticated, validateData(createServerDto), tryCatch(updateServerName));
 
 // Update the banner of the server
-serverRouter.put('/:id/banner', isAuthenticated, validateData(updateServerBannerDto), tryCatch(updateServerBanner));
+serverRouter.put('/:serverId/banner', isAuthenticated, validateData(updateServerBannerDto), tryCatch(updateServerBanner));
 
 // Delete a server
-serverRouter.delete('/:id', isAuthenticated, tryCatch(deleteServer));
+serverRouter.delete('/:serverId', isAuthenticated, tryCatch(deleteServer));
 
 serverRouter.use('/:serverId/members', memberRouter);
 

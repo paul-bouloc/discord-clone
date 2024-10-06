@@ -8,7 +8,7 @@ import { NextFunction, Request, Response } from 'express'
  * @description Get a member by id
  */
 export const getMember = async (req: Request, res: Response, next: NextFunction) => {
-  const memberId = req.params.id
+  const memberId = req.params.memberId
   const serverId = req.params.serverId
   if(!memberId || !serverId) throw new BadRequestException('Member id and server id are required')
 
@@ -27,9 +27,6 @@ export const joinServer = async (req: Request, res: Response, next: NextFunction
 
   const server = await ServerService.findById(serverId)
   if(!server) throw new NotFoundException('Server not found')
-
-  const existingMember = await MemberService.findById(serverId, req.user!.id)
-  if(existingMember) throw new BadRequestException('You are already a member of this server')
 
   const member = await MemberService.joinServer(serverId, req.user!.id)
 
