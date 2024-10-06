@@ -53,8 +53,6 @@ model Server {
   banner_data Bytes?
   banner_type ImageType?
 
-  inviteCode String @unique @default(cuid())
-
   ownerId String @db.ObjectId
   owner   User   @relation(fields: [ownerId], references: [id])
 

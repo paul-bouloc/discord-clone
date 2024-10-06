@@ -1,7 +1,6 @@
 import { BadRequestException } from '@constants/exceptions/bad-request.exception'
 import { NotFoundException } from '@constants/exceptions/not-found.exception'
 import { createServerDto, updateServerBannerDto } from '@dtos/server.dto'
-import MemberService from '@services/member.service'
 import ServerService from '@services/server.service'
 import { NextFunction, Request, Response } from 'express'
 

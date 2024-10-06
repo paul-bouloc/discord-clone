@@ -83,11 +83,31 @@ export default class ServerService {
     }
   }
 
-  static async delete(id: string): Promise<ClientServer | null> {
-    const server = await this.prisma.server.delete({
+  static async delete(id: string): Promise<void> {
+    await this.prisma.message.deleteMany({
+      where: {
+        channel: {
+          serverId: id,
+        },
+      },
+    });
+
+    await this.prisma.channel.deleteMany({
+      where: {
+        serverId: id,
+      },
+    });
+
+    await this.prisma.member.deleteMany({
+      where: {
+        serverId: id,
+      },
+    });
+
+    await this.prisma.server.delete({
       where: { id },
     });
     
-    return server;
+    return;
   }
 }
