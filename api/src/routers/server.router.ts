@@ -1,4 +1,5 @@
-import { createServer, deleteServer, getServer, getUserServers, joinServer, updateServerBanner, updateServerName } from '@controllers/server.controller';
+import { joinServer, leaveServer } from '@controllers/member.controller';
+import { createServer, deleteServer, getServer, getUserServers, updateServerBanner, updateServerName } from '@controllers/server.controller';
 import { createServerDto, updateServerBannerDto } from '@dtos/server.dto';
 import isAuthenticated from '@middlewares/is-authenticated.middleware';
 import { validateData } from '@middlewares/validate-dto.middleware';
@@ -18,6 +19,9 @@ serverRouter.post('/', isAuthenticated, validateData(createServerDto), tryCatch(
 
 // Join a server
 serverRouter.post('/:id/join', isAuthenticated, tryCatch(joinServer));
+
+// Leave a server
+serverRouter.post('/:id/leave', isAuthenticated, tryCatch(leaveServer));
 
 // Update the name of the server
 serverRouter.put('/:id/name', isAuthenticated, validateData(createServerDto), tryCatch(updateServerName));

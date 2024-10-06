@@ -18,6 +18,14 @@ export default class MemberService {
     return returnedMember;
   }
 
+  static async leaveServer(memberId: string): Promise<void> {
+    await this.prisma.member.delete({
+      where: { id: memberId },
+    });
+
+    return;
+  }
+
   static async findById(serverId: string,userId: string): Promise<ClientMember | null> {
     const member = await this.prisma.member.findFirst({
       where: { userId, serverId },
@@ -29,9 +37,14 @@ export default class MemberService {
 
     if(!user) return null
 
-    const returnedMember = {...user, role: member.role, memberSince: member.createdAt, serverId: member.serverId}
+    const returnedMember = {
+      ...user,
+      role: member.role,
+      memberSince: member.createdAt,
+      serverId: member.serverId,
+      memberId: member.id
+    }
 
     return returnedMember;
   }
 }
-
