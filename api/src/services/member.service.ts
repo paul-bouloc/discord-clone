@@ -136,4 +136,13 @@ export default class MemberService {
 
 		return clientMembers.filter((member) => member !== null) as ClientMember[];
 	}
+
+  static async updateMemberRole(memberId: string, role: MemberRole): Promise<ClientMember | null> {
+    const member = await this.prisma.member.update({
+      where: { id: memberId },
+      data: { role },
+    });
+
+    return this.findById(member.serverId, member.userId);
+  }
 }

@@ -1,5 +1,8 @@
 import { BadRequestException } from '@constants/exceptions/bad-request.exception'
+import { ForbiddenException } from '@constants/exceptions/forbidden.exception'
 import { NotFoundException } from '@constants/exceptions/not-found.exception'
+import { memberRoleDto } from '@dtos/member.dto'
+import { MemberRole } from '@prisma/client'
 import MemberService from '@services/member.service'
 import ServerService from '@services/server.service'
 import { NextFunction, Request, Response } from 'express'
@@ -58,4 +61,27 @@ export const getServerMembers = async (req: Request, res: Response, next: NextFu
   const members = await MemberService.findServerMembers(serverId)
 
   res.status(200).json(members)
+}
+
+/**
+ * @description Update the role of a member
+ */
+export const updateMemberRole = async (req: Request, res: Response, next: NextFunction) => {
+  const memberId = req.params.memberId
+  const serverId = req.params.serverId
+  if(!memberId || !serverId) throw new BadRequestException('Member id and server id are required')
+
+  const currentMember = await MemberService.findById(serverId, req.user!.id)
+  if(!currentMember) throw new NotFoundException('You are not a member of this server')
+  if(currentMember.role !== MemberRole.ADMIN) throw new ForbiddenException('You are not authorized to update the role of a member')
+  if(currentMember.memberId === memberId) throw new ForbiddenException('You cannot update your own role')
+
+  const {role} = req.body as memberRoleDto
+
+  const member = await MemberService.findById(serverId, memberId)
+  if(!member) throw new NotFoundException('Member not found')
+
+  const updatedMember = await MemberService.updateMemberRole(member.memberId, role)
+
+  res.status(200).json(updatedMember)
 }
