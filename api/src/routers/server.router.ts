@@ -3,6 +3,7 @@ import { createServer, deleteServer, getServer, getUserServers, updateServerBann
 import { createServerDto, updateServerBannerDto } from '@dtos/server.dto';
 import isAuthenticated from '@middlewares/is-authenticated.middleware';
 import { validateData } from '@middlewares/validate-dto.middleware';
+import memberRouter from '@routers/member.router';
 import tryCatch from '@utils/try-catch.util';
 import express from 'express';
 
@@ -13,9 +14,6 @@ serverRouter.get('/', isAuthenticated, tryCatch(getUserServers));
 
 // Get a server by id
 serverRouter.get('/:id', isAuthenticated, tryCatch(getServer));
-
-// Get all members of a server
-serverRouter.get('/:id/members', isAuthenticated, tryCatch(getServerMembers));
 
 // Create a server
 serverRouter.post('/', isAuthenticated, validateData(createServerDto), tryCatch(createServer));
@@ -34,5 +32,7 @@ serverRouter.put('/:id/banner', isAuthenticated, validateData(updateServerBanner
 
 // Delete a server
 serverRouter.delete('/:id', isAuthenticated, tryCatch(deleteServer));
+
+serverRouter.use('/:serverId/members', memberRouter);
 
 export default serverRouter;

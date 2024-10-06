@@ -4,12 +4,25 @@ import MemberService from '@services/member.service'
 import ServerService from '@services/server.service'
 import { NextFunction, Request, Response } from 'express'
 
+/**
+ * @description Get a member by id
+ */
+export const getMember = async (req: Request, res: Response, next: NextFunction) => {
+  const memberId = req.params.id
+  const serverId = req.params.serverId
+  if(!memberId || !serverId) throw new BadRequestException('Member id and server id are required')
+
+  const member = await MemberService.findById(serverId, memberId)
+  if(!member) throw new NotFoundException('Member not found')
+
+  res.status(200).json(member)
+}
 
 /**
  * @description Join a server
  */
 export const joinServer = async (req: Request, res: Response, next: NextFunction) => {
-  const serverId = req.params.id
+  const serverId = req.params.serverId
   if(!serverId) throw new BadRequestException('Server id is required')
 
   const server = await ServerService.findById(serverId)
@@ -27,7 +40,7 @@ export const joinServer = async (req: Request, res: Response, next: NextFunction
  * @description Leave a server
  */
 export const leaveServer = async (req: Request, res: Response, next: NextFunction) => {
-  const serverId = req.params.id
+  const serverId = req.params.serverId
   if(!serverId) throw new BadRequestException('Server id is required')
 
   const member = await MemberService.findById(serverId, req.user!.id)
@@ -42,7 +55,7 @@ export const leaveServer = async (req: Request, res: Response, next: NextFunctio
  * @description Get all members of a server
  */
 export const getServerMembers = async (req: Request, res: Response, next: NextFunction) => {
-  const serverId = req.params.id
+  const serverId = req.params.serverId
   if(!serverId) throw new BadRequestException('Server id is required')
 
   const members = await MemberService.findServerMembers(serverId)
