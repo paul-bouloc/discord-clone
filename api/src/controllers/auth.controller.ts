@@ -6,6 +6,9 @@ import UserService from '@services/user.service';
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 
+/**
+ * @description Register a new user
+ */
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   const {username, email, password} = req.body as registerDto;
   
@@ -21,6 +24,9 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
   res.status(201).json(returnedUser);
 }
 
+/**
+ * @description Login a user
+ */
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   const {email, password} = req.body as loginDto
 
@@ -33,6 +39,9 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   res.status(200).cookie('session', token).json(user)
 }
 
+/**
+ * @description Logout a user
+ */
 export const logout = async (req: Request, res: Response, next: NextFunction) => {
   res.status(200).clearCookie('session').json({message: 'Logged out successfully'})
 }
