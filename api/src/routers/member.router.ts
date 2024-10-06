@@ -1,4 +1,4 @@
-import { getMember, getServerMembers, joinServer, leaveServer, updateMemberRole } from '@controllers/member.controller';
+import { getMember, getServerMembers, joinServer, kickMember, leaveServer, updateMemberRole } from '@controllers/member.controller';
 import { memberRoleDto } from '@dtos/member.dto';
 import isAuthenticated from '@middlewares/is-authenticated.middleware';
 import { validateData } from '@middlewares/validate-dto.middleware';
@@ -22,5 +22,8 @@ memberRouter.get('/:memberId', isAuthenticated, tryCatch(getMember));
 
 // Update the role of a member
 memberRouter.put('/:memberId/role', isAuthenticated, validateData(memberRoleDto), tryCatch(updateMemberRole));
+
+// Kick a member
+memberRouter.delete('/:memberId/kick', isAuthenticated, tryCatch(kickMember));
 
 export default memberRouter;

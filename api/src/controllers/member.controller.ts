@@ -85,3 +85,24 @@ export const updateMemberRole = async (req: Request, res: Response, next: NextFu
 
   res.status(200).json(updatedMember)
 }
+
+/**
+ * @description Kick a member
+ */
+export const kickMember = async (req: Request, res: Response, next: NextFunction) => {
+  const memberId = req.params.memberId
+  const serverId = req.params.serverId
+  if(!memberId || !serverId) throw new BadRequestException('Member id and server id are required')
+
+  const currentMember = await MemberService.findById(serverId, req.user!.id)
+  if(!currentMember) throw new NotFoundException('You are not a member of this server')
+  if(currentMember.role !== MemberRole.ADMIN) throw new ForbiddenException('You are not authorized to kick a member')
+
+  const member = await MemberService.findById(serverId, memberId)
+  if(!member) throw new NotFoundException('Member not found')
+  if(member.role === MemberRole.ADMIN) throw new ForbiddenException('You cannot kick an admin')
+
+  await MemberService.leaveServer(member.memberId)
+
+  res.status(200).json({message: 'Member kicked'})
+}
