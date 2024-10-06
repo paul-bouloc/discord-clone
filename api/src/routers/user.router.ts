@@ -1,8 +1,8 @@
 import { validateData } from '@/middlewares/validate-dto.middleware';
-import { tryCatch } from '@/utils';
 import { updateUsername, updateEmail, updatePassword, updateAvatar, currentUser, getUser } from '@controllers/user.controller';
 import { userAvatarDto, userEmailDto, userNameDto, userPasswordDto } from '@dtos/user.dto';
 import isAuthenticated from '@middlewares/is-authenticated.middleware';
+import tryCatch from '@utils/try-catch.util';
 import express from 'express';
 
 const userRouter = express.Router();

@@ -1,11 +1,9 @@
-
-
+import PrismaService from '@/services/prisma.service';
+import serverErrorHandler from '@utils/server-error-handler.util';
+import validateEnv from '@utils/validate-env.util';
 import * as dotenv from 'dotenv';
 import http from 'http';
 import app from './app';
-import { serverErrorHandler, validateEnv } from '@/utils';
-import PrismaService from '@/services/prisma.service';
-import { Prisma } from '@prisma/client';
 
 dotenv.config();
 validateEnv();

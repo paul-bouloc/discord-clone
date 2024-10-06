@@ -1,7 +1,7 @@
 import { login, logout, register } from '@/controllers/auth.controller';
 import { loginDto, registerDto } from '@/dtos/auth.dtos';
 import { validateData } from '@/middlewares/validate-dto.middleware';
-import { tryCatch } from '@/utils';
+import tryCatch from '@utils/try-catch.util';
 import express from 'express';
 
 const authRouter = express.Router();

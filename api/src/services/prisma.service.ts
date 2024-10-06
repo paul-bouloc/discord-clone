@@ -1,5 +1,5 @@
-import { binaryToBase64 } from '@/utils';
 import { PrismaClient } from '@prisma/client';
+import { binaryToBase64 } from '@utils/base64-manipulation.util';
 
 class PrismaService {
   private static instance: PrismaService;
