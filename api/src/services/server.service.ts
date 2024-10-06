@@ -1,8 +1,8 @@
+import { BadRequestException } from '@constants/exceptions/bad-request.exception';
+import { createServerDto } from '@dtos/server.dto';
 import { ClientServer } from '@models/client-server.model';
 import PrismaService from '@services/prisma.service';
-import { createServerDto } from '@dtos/server.dto';
 import { base64ToBinary } from '@utils/base64-manipulation.util';
-import { BadRequestException } from '@constants/exceptions/bad-request.exception';
 
 export default class ServerService {
   private static prisma = PrismaService.getInstance().getClient();
