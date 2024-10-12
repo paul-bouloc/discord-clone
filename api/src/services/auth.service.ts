@@ -14,17 +14,18 @@ export default class AuthService {
     return AuthService.prisma.user.create({data});
   }
 
-  static generateJwtToken(userId: string){
+  static generateJwtToken(userId: string): string {
     const jwtSecretKey = process.env.JWT_SECRET as string
     return jwt.sign({userId},jwtSecretKey,{expiresIn: "7d"})
   }
 
-  static verifyJwtToken(token: string){
+  static verifyJwtToken(token: string): string | undefined {
     const jwtSecretKey = process.env.JWT_SECRET as string
     const payload = jwt.verify(token, jwtSecretKey) as JwtPayload
     if(payload){
       return payload.userId
     }
+    return undefined
   }
 
   static async login(email: string, password: string): Promise<ClientUser | null> {

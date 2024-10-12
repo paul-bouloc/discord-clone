@@ -36,7 +36,9 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
 export const updateUsername = async (req: Request, res: Response, next: NextFunction) => {
   const {username} = req.body as userNameDto
 
-  const user = await UserService.updateUsername(req.user!.id, username)
+  await UserService.updateUsername(req.user!.id, username)
+
+  const user = await UserService.findById(req.user!.id)
 
   res.status(200).json(user)
 }
@@ -47,7 +49,9 @@ export const updateUsername = async (req: Request, res: Response, next: NextFunc
 export const updateEmail = async (req: Request, res: Response, next: NextFunction) => {
   const {email} = req.body as userEmailDto
 
-  const user = await UserService.updateEmail(req.user!.id, email)
+  await UserService.updateEmail(req.user!.id, email)
+
+  const user = await UserService.findById(req.user!.id)
 
   res.status(200).json(user)
 }
@@ -62,7 +66,9 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
   if(!isPasswordCorrect) throw new UnauthorizedException('Mot de passe incorrect')
 
   const hashedNewPassword = await bcrypt.hash(newPassword, 10)
-  const user = await UserService.updatePassword(req.user!.id, hashedNewPassword)
+  await UserService.updatePassword(req.user!.id, hashedNewPassword)
+
+  const user = await UserService.findById(req.user!.id)
 
   res.status(200).json(user)
 }
@@ -73,7 +79,9 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
 export const updateAvatar = async (req: Request, res: Response, next: NextFunction) => {
   const {avatar} = req.body as userAvatarDto
 
-  const user = await UserService.updateAvatar(req.user!.id, avatar)
+  await UserService.updateAvatar(req.user!.id, avatar)
+
+  const user = await UserService.findById(req.user!.id)
 
   res.status(200).json(user)
 }
