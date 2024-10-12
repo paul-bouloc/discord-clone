@@ -1,5 +1,4 @@
 export class CustomException extends Error {
-
   statusCode: number;
   data: unknown;
 
@@ -8,5 +7,4 @@ export class CustomException extends Error {
     this.statusCode = statusCode;
     this.data = data;
   }
-
 }

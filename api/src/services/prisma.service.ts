@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { binaryToBase64 } from '@utils/base64-manipulation.util';
+import { PrismaClient } from "@prisma/client";
+import { binaryToBase64 } from "@utils/base64-manipulation.util";
 
 class PrismaService {
   private static instance: PrismaService;
@@ -10,39 +10,39 @@ class PrismaService {
       omit: {
         user: {
           password: true,
-        }
-      }
+        },
+      },
     }).$extends({
-      name:'Image conversion',
+      name: "Image conversion",
       result: {
         user: {
           avatar: {
-            needs: {avatar_data: true, avatar_type: true},
-            compute({avatar_data, avatar_type}) {
+            needs: { avatar_data: true, avatar_type: true },
+            compute({ avatar_data, avatar_type }) {
               if (!avatar_data || !avatar_type) return null;
               return binaryToBase64(avatar_data, avatar_type);
-            }
+            },
           },
         },
         server: {
           banner: {
-            needs: {banner_data: true, banner_type: true},
-            compute({banner_data, banner_type}) {
+            needs: { banner_data: true, banner_type: true },
+            compute({ banner_data, banner_type }) {
               if (!banner_data || !banner_type) return null;
               return binaryToBase64(banner_data, banner_type);
-            }
-          }
+            },
+          },
         },
         message: {
           image: {
-            needs: {image_data: true, image_type: true},
-            compute({image_data, image_type}) {
+            needs: { image_data: true, image_type: true },
+            compute({ image_data, image_type }) {
               if (!image_data || !image_type) return null;
               return binaryToBase64(image_data, image_type);
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     });
   }
 
