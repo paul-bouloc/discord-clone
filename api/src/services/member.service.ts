@@ -85,12 +85,12 @@ export default class MemberService {
 
 	static async findById(
 		serverId: string,
-		userId: string,
+		memberId: string,
 		options: { includeInactives?: boolean } = { includeInactives: false }
 	): Promise<ClientMember | null> {
 		const member = await this.prisma.member.findFirst({
 			where: {
-				userId,
+				id: memberId,
 				serverId,
 				...(options.includeInactives ? {} : { active: true }),
 			},
@@ -98,16 +98,24 @@ export default class MemberService {
 
 		if (!member) return null;
 
-		const user = await UserService.findById(userId);
+		const user = await UserService.findById(member.userId);
 
 		if (!user) return null;
 
 		const returnedMember = {
-			...user,
-			role: member.role,
-			memberSince: member.createdAt,
-			serverId: member.serverId,
+			userId: user.id,
 			memberId: member.id,
+			serverId: member.serverId,
+
+			role: member.role,
+
+			username: user.username,
+			email: user.email,
+			avatar: user.avatar,
+
+			createdAt: member.createdAt,
+			updatedAt: member.updatedAt,
+			memberSince: member.createdAt,
 		};
 
 		return returnedMember;

@@ -1,9 +1,17 @@
-import { ClientUser } from "./client-user.model";
 import { MemberRole } from "@prisma/client";
 
-export interface ClientMember extends ClientUser {
-  role: MemberRole
-  memberSince: Date
-  memberId: string
-  serverId: string
+export interface ClientMember {
+  userId: string;
+  memberId: string;
+  serverId: string;
+
+  role: MemberRole;
+
+  username: string;
+  email: string;
+  avatar: string | null;
+
+  createdAt: Date;
+  updatedAt: Date;
+  memberSince: Date;
 }
