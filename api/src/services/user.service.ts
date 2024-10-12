@@ -1,13 +1,16 @@
-import { ClientUser } from '@/models/client-user.model';
-import PrismaService from '@/services/prisma.service';
-import { BadRequestException } from '@constants/exceptions/bad-request.exception';
-import { base64ToBinary } from '@utils/base64-manipulation.util';
-import bcrypt from 'bcrypt';
+import { ClientUser } from "@/models/client-user.model";
+import PrismaService from "@/services/prisma.service";
+import { BadRequestException } from "@constants/exceptions/bad-request.exception";
+import { base64ToBinary } from "@utils/base64-manipulation.util";
+import bcrypt from "bcrypt";
 
 export default class UserService {
   private static prisma = PrismaService.getInstance().getClient();
 
-  static async findByEmailOrUsername(email?: string, username?: string): Promise<ClientUser | null> {
+  static async findByEmailOrUsername(
+    email?: string,
+    username?: string,
+  ): Promise<ClientUser | null> {
     if (!email && !username) return null;
 
     const user = await this.prisma.user.findFirst({
@@ -18,7 +21,8 @@ export default class UserService {
 
     if (!user) return null;
 
-    const {avatar_data, avatar_type, ...userWithoutAvatar} = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { avatar_data, avatar_type, ...userWithoutAvatar } = user;
 
     return userWithoutAvatar;
   }
@@ -30,7 +34,8 @@ export default class UserService {
 
     if (!user) return null;
 
-    const {avatar_data, avatar_type, ...userWithoutAvatar} = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { avatar_data, avatar_type, ...userWithoutAvatar } = user;
 
     return userWithoutAvatar;
   }
@@ -41,13 +46,17 @@ export default class UserService {
     });
 
     if (!user) return null;
-    
-    const {avatar_data, avatar_type, ...userWithoutAvatar} = user;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { avatar_data, avatar_type, ...userWithoutAvatar } = user;
 
     return userWithoutAvatar;
   }
 
-  static async updateUsername(id: string, username: string): Promise<ClientUser | null> {
+  static async updateUsername(
+    id: string,
+    username: string,
+  ): Promise<ClientUser | null> {
     const user = await this.prisma.user.update({
       where: { id },
       data: { username },
@@ -56,7 +65,10 @@ export default class UserService {
     return user;
   }
 
-  static async updateEmail(id: string, email: string): Promise<ClientUser | null> {
+  static async updateEmail(
+    id: string,
+    email: string,
+  ): Promise<ClientUser | null> {
     const user = await this.prisma.user.update({
       where: { id },
       data: { email },
@@ -78,7 +90,10 @@ export default class UserService {
     return isPasswordCorrect;
   }
 
-  static async updatePassword(id: string, password: string): Promise<ClientUser | null> {
+  static async updatePassword(
+    id: string,
+    password: string,
+  ): Promise<ClientUser | null> {
     const user = await this.prisma.user.update({
       where: { id },
       data: { password },
@@ -87,19 +102,21 @@ export default class UserService {
     return user;
   }
 
-  static async updateAvatar(id: string, avatar: string): Promise<ClientUser | null> {
+  static async updateAvatar(
+    id: string,
+    avatar: string,
+  ): Promise<ClientUser | null> {
     try {
-      const {type, binary} = base64ToBinary(avatar)
+      const { type, binary } = base64ToBinary(avatar);
       await this.prisma.user.update({
         where: { id },
         data: { avatar_data: binary, avatar_type: type },
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      throw new BadRequestException('Invalid avatar format')
+      throw new BadRequestException("Invalid avatar format");
     }
 
-    return this.findById(id)
+    return this.findById(id);
   }
-  
-  
 }

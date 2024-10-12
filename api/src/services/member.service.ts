@@ -6,146 +6,153 @@ import ServerService from "@services/server.service";
 import UserService from "@services/user.service";
 
 export default class MemberService {
-	private static prisma = PrismaService.getInstance().getClient();
+  private static prisma = PrismaService.getInstance().getClient();
 
-	static async joinServer(
-		serverId: string,
-		userId: string
-	): Promise<ClientMember | null> {
-		let member = await this.prisma.member.findFirst({
-			where: { userId, serverId },
-		});
+  static async joinServer(
+    serverId: string,
+    userId: string,
+  ): Promise<ClientMember | null> {
+    let member = await this.prisma.member.findFirst({
+      where: { userId, serverId },
+    });
 
-		if (member && !member.active) {
-			await this.prisma.member.update({
-				where: { id: member.id },
-				data: { active: true },
-			});
-		} else if (member && member.active) {
-			throw new BadRequestException("You are already a member of this server");
-		} else {
-			member = await this.prisma.member.create({
-				data: {
-					userId,
-					serverId,
-				},
-			});
-		}
+    if (member && !member.active) {
+      await this.prisma.member.update({
+        where: { id: member.id },
+        data: { active: true },
+      });
+    } else if (member && member.active) {
+      throw new BadRequestException("You are already a member of this server");
+    } else {
+      member = await this.prisma.member.create({
+        data: {
+          userId,
+          serverId,
+        },
+      });
+    }
 
-		const returnedMember = await this.findById(serverId, userId);
+    const returnedMember = await this.findById(serverId, userId);
 
-		return returnedMember;
-	}
+    return returnedMember;
+  }
 
-	static async leaveServer(memberId: string): Promise<void> {
-		const member = await this.prisma.member.update({
-			where: { id: memberId },
-			data: { active: false },
-		});
-    
-		if (member.role === MemberRole.ADMIN) {
-			// Next part of the code will search if there's another ADMIN in the server
-			const admins = await this.prisma.member.findMany({
-				where: { serverId: member.serverId, role: MemberRole.ADMIN, NOT: {id: member.id} },
-			});
-			if (admins.length > 0) return;
+  static async leaveServer(memberId: string): Promise<void> {
+    const member = await this.prisma.member.update({
+      where: { id: memberId },
+      data: { active: false },
+    });
 
-			// If there's no ADMIN, the first MODERATOR will be promoted to ADMIN
-			const moderators = await this.prisma.member.findMany({
-				where: { serverId: member.serverId, role: MemberRole.MODERATOR },
-			});
-			if (moderators.length > 0) {
-				const newAdmin = moderators[0];
-				await this.prisma.member.update({
-					where: { id: newAdmin.id },
-					data: { role: MemberRole.ADMIN },
-				});
-				return;
-			}
+    if (member.role === MemberRole.ADMIN) {
+      // Next part of the code will search if there's another ADMIN in the server
+      const admins = await this.prisma.member.findMany({
+        where: {
+          serverId: member.serverId,
+          role: MemberRole.ADMIN,
+          NOT: { id: member.id },
+        },
+      });
+      if (admins.length > 0) return;
 
-			// If there's no MODERATOR, the first MEMBER will be promoted to MODERATOR
-			const members = await this.prisma.member.findMany({
-				where: { serverId: member.serverId, role: MemberRole.USER },
-			});
-			if (members.length > 0) {
-				const newModerator = members[0];
-				await this.prisma.member.update({
-					where: { id: newModerator.id },
-					data: { role: MemberRole.MODERATOR },
-				});
-				return;
-			}
+      // If there's no ADMIN, the first MODERATOR will be promoted to ADMIN
+      const moderators = await this.prisma.member.findMany({
+        where: { serverId: member.serverId, role: MemberRole.MODERATOR },
+      });
+      if (moderators.length > 0) {
+        const newAdmin = moderators[0];
+        await this.prisma.member.update({
+          where: { id: newAdmin.id },
+          data: { role: MemberRole.ADMIN },
+        });
+        return;
+      }
 
-			// If there's no MEMBER, the server will be deleted 
-			await ServerService.delete(member.serverId);
-		}
+      // If there's no MODERATOR, the first MEMBER will be promoted to MODERATOR
+      const members = await this.prisma.member.findMany({
+        where: { serverId: member.serverId, role: MemberRole.USER },
+      });
+      if (members.length > 0) {
+        const newModerator = members[0];
+        await this.prisma.member.update({
+          where: { id: newModerator.id },
+          data: { role: MemberRole.MODERATOR },
+        });
+        return;
+      }
 
-		return;
-	}
+      // If there's no MEMBER, the server will be deleted
+      await ServerService.delete(member.serverId);
+    }
 
-	static async findById(
-		serverId: string,
-		memberId: string,
-		options: { includeInactives?: boolean } = { includeInactives: false }
-	): Promise<ClientMember | null> {
-		const member = await this.prisma.member.findFirst({
-			where: {
-				id: memberId,
-				serverId,
-				...(options.includeInactives ? {} : { active: true }),
-			},
-		});
+    return;
+  }
 
-		if (!member) return null;
+  static async findById(
+    serverId: string,
+    memberId: string,
+    options: { includeInactives?: boolean } = { includeInactives: false },
+  ): Promise<ClientMember | null> {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        id: memberId,
+        serverId,
+        ...(options.includeInactives ? {} : { active: true }),
+      },
+    });
 
-		const user = await UserService.findById(member.userId);
+    if (!member) return null;
 
-		if (!user) return null;
+    const user = await UserService.findById(member.userId);
 
-		const returnedMember = {
-			userId: user.id,
-			memberId: member.id,
-			serverId: member.serverId,
+    if (!user) return null;
 
-			role: member.role,
+    const returnedMember = {
+      userId: user.id,
+      memberId: member.id,
+      serverId: member.serverId,
 
-			username: user.username,
-			email: user.email,
-			avatar: user.avatar,
+      role: member.role,
 
-			createdAt: member.createdAt,
-			updatedAt: member.updatedAt,
-			memberSince: member.createdAt,
-		};
+      username: user.username,
+      email: user.email,
+      avatar: user.avatar,
 
-		return returnedMember;
-	}
+      createdAt: member.createdAt,
+      updatedAt: member.updatedAt,
+      memberSince: member.createdAt,
+    };
 
-	static async findServerMembers(
-		serverId: string,
-		options: { includeInactives?: boolean } = { includeInactives: false }
-	): Promise<ClientMember[]> {
-		const members = await this.prisma.member.findMany({
-			where: {
-				serverId,
-				...(options.includeInactives ? {} : { active: true }),
-			},
-		});
+    return returnedMember;
+  }
 
-		const clientMembers = await Promise.all(
-			members.map(async (member) => {
-				const user = await this.findById(member.serverId, member.userId);
+  static async findServerMembers(
+    serverId: string,
+    options: { includeInactives?: boolean } = { includeInactives: false },
+  ): Promise<ClientMember[]> {
+    const members = await this.prisma.member.findMany({
+      where: {
+        serverId,
+        ...(options.includeInactives ? {} : { active: true }),
+      },
+    });
 
-				if (!user) return null;
+    const clientMembers = await Promise.all(
+      members.map(async (member) => {
+        const user = await this.findById(member.serverId, member.userId);
 
-				return user;
-			})
-		);
+        if (!user) return null;
 
-		return clientMembers.filter((member) => member !== null) as ClientMember[];
-	}
+        return user;
+      }),
+    );
 
-  static async updateMemberRole(memberId: string, role: MemberRole): Promise<ClientMember | null> {
+    return clientMembers.filter((member) => member !== null) as ClientMember[];
+  }
+
+  static async updateMemberRole(
+    memberId: string,
+    role: MemberRole,
+  ): Promise<ClientMember | null> {
     const member = await this.prisma.member.update({
       where: { id: memberId },
       data: { role },
