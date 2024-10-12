@@ -1,4 +1,3 @@
-import { getServerMembers, joinServer, leaveServer } from '@controllers/member.controller';
 import { createServer, deleteServer, getServer, getUserServers, updateServerBanner, updateServerName } from '@controllers/server.controller';
 import { createServerDto, updateServerBannerDto } from '@dtos/server.dto';
 import isAuthenticated from '@middlewares/is-authenticated.middleware';

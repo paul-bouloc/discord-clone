@@ -10,6 +10,7 @@ function getBase64Type(base64String: string): ImageType {
     const type = base64String.split(',')[0]?.split(':')[1]?.split('/')[1]?.split(';')[0]?.toUpperCase();
     if (!Object.values(ImageType).includes(type as ImageType)) throw new Error();
     return type as ImageType;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     throw new BadRequestException('L\'avatar doit être un format d\'image valide');
   }

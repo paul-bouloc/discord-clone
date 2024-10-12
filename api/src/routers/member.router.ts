@@ -2,7 +2,6 @@ import { getMember, getServerMembers, joinServer, kickMember, leaveServer, updat
 import { memberRoleDto } from '@dtos/member.dto';
 import isAuthenticated from '@middlewares/is-authenticated.middleware';
 import { validateData } from '@middlewares/validate-dto.middleware';
-import serverRouter from '@routers/server.router';
 import tryCatch from '@utils/try-catch.util';
 import express from 'express';
 

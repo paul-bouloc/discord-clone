@@ -1,5 +1,4 @@
 import { BadRequestException } from "@constants/exceptions/bad-request.exception";
-import { createServerDto } from "@dtos/server.dto";
 import { ClientServer } from "@models/client-server.model";
 import { MemberRole } from "@prisma/client";
 import PrismaService from "@services/prisma.service";
@@ -21,6 +20,7 @@ export default class ServerService {
 			},
 		});
 
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { banner_data, banner_type, ...serverWithoutBanner } = server;
 
 		return serverWithoutBanner;
@@ -33,6 +33,7 @@ export default class ServerService {
 
 		if (!server) return null;
 
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { banner_data, banner_type, ...serverWithoutBanner } = server;
 
 		return serverWithoutBanner;
@@ -54,6 +55,7 @@ export default class ServerService {
 		});
 
 		const clientServers = servers.map((server) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { banner_data, banner_type, ...serverWithoutBanner } = server;
 
 			return serverWithoutBanner;
@@ -87,6 +89,7 @@ export default class ServerService {
 			});
 
 			return server;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			throw new BadRequestException("Invalid banner format");
 		}

@@ -1,8 +1,8 @@
 import { CustomException } from '@/constants/exceptions/custom.exception';
 import { ApiError } from '@models/api-error.model';
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { ErrorRequestHandler, Request, Response } from "express";
 
-export const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response) => {
   // Handled errors
   if(err instanceof CustomException) {
     const { statusCode, message } = err;

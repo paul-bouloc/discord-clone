@@ -18,6 +18,7 @@ export default class UserService {
 
     if (!user) return null;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {avatar_data, avatar_type, ...userWithoutAvatar} = user;
 
     return userWithoutAvatar;
@@ -30,6 +31,7 @@ export default class UserService {
 
     if (!user) return null;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {avatar_data, avatar_type, ...userWithoutAvatar} = user;
 
     return userWithoutAvatar;
@@ -42,6 +44,7 @@ export default class UserService {
 
     if (!user) return null;
     
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {avatar_data, avatar_type, ...userWithoutAvatar} = user;
 
     return userWithoutAvatar;
@@ -94,6 +97,7 @@ export default class UserService {
         where: { id },
         data: { avatar_data: binary, avatar_type: type },
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new BadRequestException('Invalid avatar format')
     }

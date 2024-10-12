@@ -5,12 +5,12 @@ import { memberRoleDto } from '@dtos/member.dto'
 import { MemberRole } from '@prisma/client'
 import MemberService from '@services/member.service'
 import ServerService from '@services/server.service'
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 
 /**
  * @description Get a member by id
  */
-export const getMember = async (req: Request, res: Response, next: NextFunction) => {
+export const getMember = async (req: Request, res: Response) => {
   const memberId = req.params.memberId
   const serverId = req.params.serverId
   if(!memberId || !serverId) throw new BadRequestException('Member id and server id are required')
@@ -24,7 +24,7 @@ export const getMember = async (req: Request, res: Response, next: NextFunction)
 /**
  * @description Join a server
  */
-export const joinServer = async (req: Request, res: Response, next: NextFunction) => {
+export const joinServer = async (req: Request, res: Response) => {
   const serverId = req.params.serverId
   if(!serverId) throw new BadRequestException('Server id is required')
 
@@ -39,7 +39,7 @@ export const joinServer = async (req: Request, res: Response, next: NextFunction
 /**
  * @description Leave a server
  */
-export const leaveServer = async (req: Request, res: Response, next: NextFunction) => {
+export const leaveServer = async (req: Request, res: Response) => {
   const serverId = req.params.serverId
   if(!serverId) throw new BadRequestException('Server id is required')
 
@@ -54,7 +54,7 @@ export const leaveServer = async (req: Request, res: Response, next: NextFunctio
 /**
  * @description Get all members of a server
  */
-export const getServerMembers = async (req: Request, res: Response, next: NextFunction) => {
+export const getServerMembers = async (req: Request, res: Response) => {
   const serverId = req.params.serverId
   if(!serverId) throw new BadRequestException('Server id is required')
 
@@ -66,7 +66,7 @@ export const getServerMembers = async (req: Request, res: Response, next: NextFu
 /**
  * @description Update the role of a member
  */
-export const updateMemberRole = async (req: Request, res: Response, next: NextFunction) => {
+export const updateMemberRole = async (req: Request, res: Response) => {
   const memberId = req.params.memberId
   const serverId = req.params.serverId
   if(!memberId || !serverId) throw new BadRequestException('Member id and server id are required')
@@ -89,7 +89,7 @@ export const updateMemberRole = async (req: Request, res: Response, next: NextFu
 /**
  * @description Kick a member
  */
-export const kickMember = async (req: Request, res: Response, next: NextFunction) => {
+export const kickMember = async (req: Request, res: Response) => {
   const memberId = req.params.memberId
   const serverId = req.params.serverId
   if(!memberId || !serverId) throw new BadRequestException('Member id and server id are required')
