@@ -1,11 +1,13 @@
 import { CustomException } from "@/constants/exceptions/custom.exception";
 import { ApiError } from "@models/api-error.model";
-import { ErrorRequestHandler, Request, Response } from "express";
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 
 export const errorHandler: ErrorRequestHandler = (
   err: Error,
   req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  next: NextFunction,
 ) => {
   // Handled errors
   if (err instanceof CustomException) {
@@ -33,4 +35,5 @@ export const errorHandler: ErrorRequestHandler = (
     message: "Something went wrong",
     data: undefined,
   });
+  return;
 };
