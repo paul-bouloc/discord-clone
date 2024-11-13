@@ -21,7 +21,8 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Navigate to="app"/>
+      element: <Navigate to="app"/>,
+      errorElement: <ErrorPage/>
     },
     {
       path: 'app',

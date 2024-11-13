@@ -10,7 +10,7 @@ const app: Express = express();
 
 app
   .use(helmet())
-  .use(cors({ credentials: true }))
+  .use(cors({ credentials: true, origin: "http://localhost:5173" }))
   .use(express.json({ limit: "1mb" }))
   .use(express.urlencoded({ extended: true, limit: "1mb" }))
   .use(cookieParser())

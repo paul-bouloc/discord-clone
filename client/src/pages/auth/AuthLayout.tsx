@@ -11,7 +11,7 @@ export default function AuthLayout() {
     queryKey: ['AuthLayoutGetUser'],
     queryFn: () =>
       axios
-        .get(import.meta.env.VITE_API_URL + "/auth/me", {
+        .get(import.meta.env.VITE_API_URL + "/user", {
           withCredentials: true
         })
         .then((res) => {
@@ -24,7 +24,8 @@ export default function AuthLayout() {
   if(isFetching) return <LoadingPage/>
   if(error) {    
     return (
-      <div className="flex flex-col items-center justify-center w-full h-screen bg-[radial-gradient(circle,rgba(255,255,255,1)_0%,_rgba(14,165,233,.4)_100%)] text-sky-950">
+      <div className="text-white flex flex-col items-center justify-center w-full h-screen bg-[url('/bg_artwork.svg')] bg-no-repeat bg-cover bg-left-top">
+        <img src="/discord_full_white.svg" alt="bg_artwork" className="absolute top-12 left-12 w-[124px] h-[24px]" />
         <Outlet/>
       </div>
     )

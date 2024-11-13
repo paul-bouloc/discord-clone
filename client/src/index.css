@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
   font-family: sans-serif;
 }
@@ -16,4 +20,32 @@ body {
   :root {
     --radius: 0.5rem;
   }
+}
+
+@font-face {
+  font-family: 'gg-sans';
+  src: url('../fonts/gg-sans-regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'gg-sans';
+  src: url('../fonts/gg-sans-medium.ttf');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'gg-sans';
+  src: url('../fonts/gg-sans-semibold.ttf');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'gg-sans';
+  src: url('../fonts/gg-sans-bold.ttf');
+  font-weight: 700;
+  font-style: normal;
 }
